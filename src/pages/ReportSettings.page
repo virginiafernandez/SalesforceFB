@@ -1,0 +1,41 @@
+<apex:page controller="ReportSettingsController" action="{!saveSettings}">
+    <apex:form >
+	    <apex:pageBlock title="Custom Report Emailing Settings">
+		    <apex:pageBlockButtons >
+	           <apex:commandButton action="{!save}" value="Save"/>
+	        </apex:pageBlockButtons>
+	        
+	        <apex:pageBlockSection title="Users" columns="1">
+				<apex:outputLabel value="Users to send reports to:"></apex:outputLabel><br/>
+				<apex:selectList value="{!selectedUsers}" multiselect="true">
+	                <apex:selectOptions value="{!users}"/>
+				</apex:selectList>
+            </apex:pageBlockSection>
+			
+			<apex:pageBlockSection title="Reports" columns="1">
+		        <apex:pageBlockTable value="{!reports}" var="report">
+	                <apex:column >
+	                    <apex:facet name="header">Selected</apex:facet>
+	                    <apex:inputCheckbox value="{!report.selected}"></apex:inputCheckbox>
+	                </apex:column>
+	                <apex:column >
+	                    <apex:facet name="header">Name</apex:facet>
+	                    {!report.name}
+	                </apex:column>
+	                <apex:column >
+	                    <apex:facet name="header">Filtered by user</apex:facet>
+	                    <apex:inputCheckbox value="{!report.filtered}"></apex:inputCheckbox>
+	                </apex:column>
+	            </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+	    </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <apex:pageBlock title="Custom Report Emailing Scheduler" >
+            
+            <apex:commandButton action="{!start}" value="Start"/>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
