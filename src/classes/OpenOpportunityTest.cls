@@ -132,4 +132,39 @@ public class OpenOpportunityTest {
         return opportunity.Id;        	
     }    
     
+    static testMethod void testDailyEmailReportNoSetting() {
+        
+        createOpportunity();           
+        Test.startTest();           
+        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
+        Test.stopTest();        
+    }
+    
+    private static void setSetting(Id id) {
+    	Opportunity opp = [select Owner.Email, OwnerId from Opportunity where id =: id];
+        
+        Open_Opportunity_Settings__c setting = Open_Opportunity_Settings__c.getOrgDefaults();
+        setting.Biz_Dev_Daily_Report_Emails__c = opp.Owner.Email;
+        setting.Default_Email_Recipient__c = opp.Owner.Email;
+        insert setting;
+    }
+    
+    static testMethod void testDailyEmailReport() {
+        
+        setSetting(createOpportunity());
+                   
+        Test.startTest();           
+        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
+        Test.stopTest();        
+    
+    }
+    
+    static testMethod void testDailyEmailReportCustomColumns() {
+    	setSetting(createOpportunity());
+    	addCustomColumns();
+    	
+    	Test.startTest();           
+        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
+        Test.stopTest();    
+    }
 }

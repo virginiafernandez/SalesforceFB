@@ -6,6 +6,15 @@
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Biz_Dev_Daily_Report_Emails__c</fullName>
+        <externalId>false</externalId>
+        <label>Biz Dev Daily Report Emails</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Days_Not_Updated_Limit_Early_Stages__c</fullName>
         <defaultValue>10</defaultValue>
         <description>If Days not Updated field is greater than this value, the row will be colored red.</description>
