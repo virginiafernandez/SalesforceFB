@@ -1,5 +1,12 @@
 <apex:page controller="ReportSettingsController" action="{!saveSettings}">
     <apex:form >
+        <apex:pageBlock title="Allos Access to send Report to users" >
+            <apex:outputLabel rendered="{! errorAllow != null}" value=" {!errorAllow}">
+            </apex:outputLabel><br/>
+            <apex:commandButton action="{!allowAccess}" value="Allow Access"/>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form >
 	    <apex:pageBlock title="Custom Report Emailing Settings">
 		    <apex:pageBlockButtons >
 	           <apex:commandButton action="{!save}" value="Save"/>
@@ -33,9 +40,19 @@
     </apex:form>
     <apex:form >
         <apex:pageBlock title="Custom Report Emailing Scheduler" >
-            
-            <apex:commandButton action="{!start}" value="Start"/>
-            
+            <apex:outputPanel rendered="{!status == 'Start'}" >
+	            <apex:outputLabel value="Scheduling time: "></apex:outputLabel>
+	            <apex:inputText required="true" value="{!schedulingTime}"></apex:inputText><br/>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!status != 'Start'}" >
+                <apex:outputLabel value="Scheduler State:"></apex:outputLabel>
+                <apex:outputLabel value="{!cronState}"></apex:outputLabel><br/>
+                <apex:outputLabel value="Next Fire Time:"></apex:outputLabel>
+                <apex:outputLabel value="{!nextFireTime}"></apex:outputLabel><br/>
+            </apex:outputPanel>
+            <apex:outputLabel rendered="{! errorStart != null}" value=" {!errorStart}">
+            </apex:outputLabel><br/>
+            <apex:commandButton action="{!start}" value="{!status}"/>
         </apex:pageBlock>
     </apex:form>
 </apex:page>

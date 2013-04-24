@@ -17,7 +17,14 @@ global with sharing class AccountsWithoutContactsController {
 	        mail.setSubject('Accunts without Contacts Report');
 	        
 	        Pagereference report = new Pagereference('/apex/AccountsWithoutContacts?userId='+user.Id);
-	        mail.setHtmlBody(report.getContent().toString());
+	        
+	        if (Test.isRunningTest()) {
+	           mail.setHtmlBody('<table></table>');	
+	        }
+	        else {
+	           mail.setHtmlBody(report.getContent().toString());
+	        }
+	        
 	        emails.add(mail);
 	        
     	}
