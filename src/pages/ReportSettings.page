@@ -1,6 +1,6 @@
 <apex:page controller="ReportSettingsController" action="{!saveSettings}">
     <apex:form >
-        <apex:pageBlock title="Allos Access to send Report to users" >
+        <apex:pageBlock title="Allow Access to send Report to users" >
             <apex:outputLabel rendered="{! errorAllow != null}" value=" {!errorAllow}">
             </apex:outputLabel><br/>
             <apex:commandButton action="{!allowAccess}" value="Allow Access"/>

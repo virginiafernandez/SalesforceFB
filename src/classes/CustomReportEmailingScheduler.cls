@@ -16,6 +16,7 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
     }
         
     global void execute(SchedulableContext bc) {
+    	
         sendEmail();
     }
     
@@ -37,7 +38,16 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
         req.setMethod('POST');
         
         Http http = new Http();
-        HttpResponse res = http.send(req);
+        HttpResponse res = null; 
+        
+        if (Test.isRunningTest()) {
+        	OauthHttpCalloutMock mock = new OauthHttpCalloutMock();
+            res = mock.respond(req);
+        }
+        else {
+            res = http.send(req);
+        }
+        
         Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
         String access_token = (String) params.get('access_token');
         
@@ -46,7 +56,14 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
         req.setMethod('GET');
         req.setHeader('Authorization', 'Bearer '+access_token);         
         http = new Http();
-        res = http.send(req);
+        
+        if (Test.isRunningTest()) {
+            OauthHttpCalloutMock mock = new OauthHttpCalloutMock();
+            res = mock.respond(req);
+        }
+        else {
+            res = http.send(req);
+        }
         
     }
     

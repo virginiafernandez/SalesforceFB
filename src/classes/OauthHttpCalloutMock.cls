@@ -1,3 +1,9 @@
+/**
+ * This class is a callout mock to simulate the oauth authentication. 
+ *
+ * @author  Virginia Fernández
+ * @date    24/04/2013
+ */
 global class OauthHttpCalloutMock implements HTTPCalloutMock {
 	
 	public static final String RESPONSE_ERROR = '{"success":"false"}';
@@ -20,7 +26,9 @@ global class OauthHttpCalloutMock implements HTTPCalloutMock {
     	
     	HTTPResponse res = new HTTPResponse();
     	if (request.getMethod() == 'GET') {
-    		if (request.getEndpoint().endsWith('/services/apexrest/SendReport/')) {
+    		if (request.getEndpoint().endsWith('/services/apexrest/SendReport/') ||
+    		    request.getEndpoint().endsWith('/services/apexrest/SendCustomReport/')) {
+    		    	
                 if (request.getHeader('Authorization') == 'Bearer 123456') {
                 	res.setBody(RESPONSE_OK);
                 	return res;

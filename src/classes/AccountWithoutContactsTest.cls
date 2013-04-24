@@ -67,10 +67,6 @@ private class AccountWithoutContactsTest {
     @isTest(SeeAllData=true)
     static void reportTest() {
         
-        Reports_Settings__c settings = Reports_Settings__c.getOrgDefaults();
-        settings.Report_Id__c = '00Og0000000JP2f';
-        update settings;
-        
         Test.startTest();
         
         Apexpages.currentPage().getParameters().put('userId', Userinfo.getUserId());

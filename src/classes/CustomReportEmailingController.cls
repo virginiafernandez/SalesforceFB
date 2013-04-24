@@ -22,7 +22,13 @@ public with sharing class CustomReportEmailingController {
         }
         
         Pagereference report = new Pagereference(report_url+'export=1&enc=UTF-8&xf=xls');
-        reportHtml = report.getContent().toString();
+        
+        if (Test.isRunningTest()) {
+            reportHtml = '<table></table>';	
+        }
+        else {
+            reportHtml = report.getContent().toString();
+        }
     }
     
     public String getReportHtml() {

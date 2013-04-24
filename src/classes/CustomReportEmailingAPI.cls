@@ -35,7 +35,14 @@ global with sharing class CustomReportEmailingAPI {
 		            }
 		            
 		            Pagereference report_page = new Pagereference(url);
-		            mail.setHtmlBody(report_page.getContent().toString());
+		            
+		            if (Test.isRunningTest()) {
+		            	mail.setHtmlBody('<table></table>');
+		            }
+		            else {
+                        mail.setHtmlBody(report_page.getContent().toString());
+		            }
+		            
 		            emails.add(mail);
 		            
 		        }
