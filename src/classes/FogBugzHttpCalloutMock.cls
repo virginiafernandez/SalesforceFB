@@ -1,3 +1,9 @@
+/**
+ * Mock for testing callouts for FogBugzAPI
+ *
+ * @author  Virginia Fernández
+ * @date    04/25/2012
+ */
 global class FogBugzHttpCalloutMock implements HttpCalloutMock {
     
     private String responseBody;

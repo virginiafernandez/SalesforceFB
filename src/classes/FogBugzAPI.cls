@@ -2,6 +2,8 @@
  * Client for the FogBugzAPI
  *
  * @author  Antonio Grassi
+ * @modifiedBy Virginia Fernández
+ *
  * @date    11/13/2012
  */
 public with sharing class FogBugzAPI {
