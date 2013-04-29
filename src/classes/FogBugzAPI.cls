@@ -234,6 +234,7 @@ public with sharing class FogBugzAPI {
            res = mock.respond(req);
         }
         else {
+        	
            res = connection.send(req);
         }
         
@@ -270,7 +271,7 @@ public with sharing class FogBugzAPI {
 	        
 	        if (Test.isRunningTest()) {
 	           	
-	           FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock(FogBugzHttpCalloutMock.RESPONSE_TAGS);
+	           FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
 	           res = mock.respond(req);
 	        }
 	        else {
@@ -278,10 +279,9 @@ public with sharing class FogBugzAPI {
 	           res = connection.send(req);
 	        }
 	        
-	        List<String> listTags = parseCaseTags(res.getBody());
-	        
 	        List<String> listTags = getCaseTags(fbCase);
 	        tags = '';
+	        
 	        for (String tag: listTags) {
 	        	
 	        	if (!tag.startsWith('[') || !tag.endsWith(']') || !Pattern.matches('\\d*/\\d*', tag.substring(1, tag.length()-1))) {
@@ -321,8 +321,8 @@ public with sharing class FogBugzAPI {
     }
     
     public String addProductTag(FogBugzCase fbCase, String tags) {
-        
         List<String> listTags = getCaseTags(fbCase);
+        
         for (String tag: listTags) {
         	tags += tag +','; 
         }
