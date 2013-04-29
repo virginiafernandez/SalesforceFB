@@ -51,8 +51,8 @@ public class OpenOpportunityMailer {
         sendEmail(content, recipients, EMAIL_SUBJECT, usersNameSubject);
     }
     
-    public static void sendRedOpenOpportunitiesBatchReport(User user, String[] recipients, Map<String, Opportunity[]> stagedOpportunities) {
-        
+    private static Map<String, Opportunity[]> getRedStagedOpportunities(Map<String, Opportunity[]> stagedOpportunities)
+    {
         Map<String, Opportunity[]> redStagedOpportunities = new Map<String, Opportunity[]>();
         
         Integer daysNotUpdatedLimit = Open_Opportunity_Settings__c.getOrgDefaults().Days_Not_Updated_Limit__c != null 
@@ -90,7 +90,14 @@ public class OpenOpportunityMailer {
               redStagedOpportunities.put(stageName, opportunities);
             }
         } 
+        
+        return redStagedOpportunities;
+    }
     
+    public static void sendRedOpenOpportunitiesBatchReport(User user, String[] recipients, Map<String, Opportunity[]> stagedOpportunities) {
+        
+        Map<String, Opportunity[]> redStagedOpportunities = getRedStagedOpportunities(stagedOpportunities);
+            
         // Only send Mail if there are opportunities    
         if (!redStagedOpportunities.isEmpty()) {
             
@@ -102,6 +109,23 @@ public class OpenOpportunityMailer {
             String content = OpenOpportunityEmailUtils.buildEmailContent(redStagedOpportunities, false, stageComments);
             
             sendEmail(content, recipients, RED_EMAIL_SUBJECT, user.Name);
+        }
+    }
+    
+    public static void sendRedOpenOpportunitiesUsers(User[] users, Map<String, Opportunity[]> stagedOpportunities) {
+        
+        Map<String, Opportunity[]> redStagedOpportunities = getRedStagedOpportunities(stagedOpportunities); 
+    
+        // Only send Mail if there are opportunities    
+        if (!redStagedOpportunities.isEmpty()) {
+            
+            Map<String, String> stageComments = new Map<String, String>();
+            for (String stageComment :redStagedOpportunities.keySet()) {           
+                stageComments.put(stageComment, '');
+            }
+            
+            String content = OpenOpportunityEmailUtils.buildEmailContent(redStagedOpportunities, false, stageComments);
+            sendEmails(content, users, RED_EMAIL_SUBJECT);
         }
     }
     
@@ -139,7 +163,8 @@ public class OpenOpportunityMailer {
 	        
 	        mail.setHtmlBody(content);
 	        mail.setSubject(subject);
-	        mail.setToAddresses(new String[]{user.Email});
+	        mail.setTargetObjectId(user.Id);
+	        mail.setSaveAsActivity(false);
 	        mails.add(mail);
 	        
         }
