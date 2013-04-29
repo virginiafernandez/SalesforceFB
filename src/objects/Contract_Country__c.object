@@ -71,4 +71,17 @@
     <pluralLabel>Contract Countries</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>Add_Country</fullName>
+        <availability>online</availability>
+        <description>Select a Country to add to the Contract</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Add Country</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a05/e?CF00Nb0000002IDFv={!DContract__c.Name}&amp;CF00Nb0000002IDFv_lkid={!DContract__c.Salesforce_Contract_ID__c}&amp;saveURL=%2F{!DContract__c.Salesforce_Contract_ID__c}&amp;retURL=%2F{!DContract__c.Salesforce_Contract_ID__c}</url>
+    </webLinks>
 </CustomObject>

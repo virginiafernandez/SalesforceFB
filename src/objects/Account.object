@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>AccountSource</fullName>
         <picklist>
@@ -1142,44 +1141,6 @@ Passive = remind every 3 months.</inlineHelpText>
         </filters>
         <label>not validate_tops</label>
     </listViews>
-    <searchLayouts>
-        <customTabListAdditionalFields>ACCOUNT.NAME</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Country__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>CORE.USERS.ALIAS</customTabListAdditionalFields>
-        <customTabListAdditionalFields>ACCOUNT.LAST_UPDATE</customTabListAdditionalFields>
-        <customTabListAdditionalFields>PARENT_NAME</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Country__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>CORE.USERS.ALIAS</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>ACCOUNT.LAST_UPDATE</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>PARENT_NAME</lookupDialogsAdditionalFields>
-        <lookupFilterFields>ACCOUNT.NAME</lookupFilterFields>
-        <lookupFilterFields>00Nb0000000jTAA</lookupFilterFields>
-        <lookupFilterFields>00Nb0000000jTAo</lookupFilterFields>
-        <lookupFilterFields>CORE.USERS.ALIAS</lookupFilterFields>
-        <lookupFilterFields>ACCOUNT.LAST_UPDATE</lookupFilterFields>
-        <lookupFilterFields>PARENT_NAME</lookupFilterFields>
-        <lookupPhoneDialogsAdditionalFields>ACCOUNT.NAME</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Country__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>Status__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>CORE.USERS.ALIAS</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>ACCOUNT.LAST_UPDATE</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>PARENT_NAME</lookupPhoneDialogsAdditionalFields>
-        <searchFilterFields>ACCOUNT.NAME</searchFilterFields>
-        <searchFilterFields>Country__c</searchFilterFields>
-        <searchFilterFields>Status__c</searchFilterFields>
-        <searchFilterFields>CORE.USERS.ALIAS</searchFilterFields>
-        <searchFilterFields>ACCOUNT.LAST_UPDATE</searchFilterFields>
-        <searchFilterFields>PARENT_NAME</searchFilterFields>
-        <searchResultsAdditionalFields>ACCOUNT.NAME</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Country__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>ACCOUNT.LAST_UPDATE</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>PARENT_NAME</searchResultsAdditionalFields>
-    </searchLayouts>
     <validationRules>
         <fullName>Account_Add_Parents_Account</fullName>
         <active>false</active>

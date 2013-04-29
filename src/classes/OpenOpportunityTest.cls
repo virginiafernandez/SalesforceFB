@@ -146,6 +146,8 @@ public class OpenOpportunityTest {
         Open_Opportunity_Settings__c setting = Open_Opportunity_Settings__c.getOrgDefaults();
         setting.Biz_Dev_Daily_Report_Emails__c = opp.Owner.Email;
         setting.Default_Email_Recipient__c = opp.Owner.Email;
+        setting.Days_Not_Updated_Limit_Early_Stages__c = -1;
+        setting.Days_Not_Updated_Limit__c = -1;
         insert setting;
     }
     
@@ -167,4 +169,28 @@ public class OpenOpportunityTest {
         System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
         Test.stopTest();    
     }
+    
+    static testMethod void testOpenOpportunityNeedUpdateDailySchedule() {
+        setSetting(createOpportunity());
+        addCustomColumns();
+        
+        Test.startTest();           
+        System.schedule('Test Daily Open Opportunity Need Update', '0 0 * * * ?', new OpenOpportunityNeedUpdateDailySchedule()); 
+        Test.stopTest();       
+    }
+    
+    static testMethod void testOpenOpportunityNeedUpdateDailyScheduleLateStage() {
+    	String id = createOpportunity();
+        setSetting(id);
+        
+        Opportunity opp = [select Id, StageName from Opportunity where Id =: id];
+        opp.StageName = 'Stage 4 - Proposal Development';
+        update opp;
+        
+        addCustomColumns();
+        
+        Test.startTest();           
+        System.schedule('Test Daily Open Opportunity Need Update', '0 0 * * * ?', new OpenOpportunityNeedUpdateDailySchedule()); 
+        Test.stopTest();       
+    }    
 }
