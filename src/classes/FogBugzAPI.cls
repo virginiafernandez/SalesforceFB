@@ -328,10 +328,16 @@ public with sharing class FogBugzAPI {
     	
         String newTags = '';
         List<String> listTags = getCaseTags(fbCase);
+        
         for (String tag: listTags) {
             if (!tags.contains(tag)) {
             	newTags += tag+',';
             } 
+        }
+        
+        if (newTags.equals('')) {
+        	
+        	newTags = ' ';
         }
         
         Map<String, String> params = new Map<String, String> {
