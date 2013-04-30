@@ -118,7 +118,7 @@ private class TestFBApi {
         System.assertEquals(fbCaseId, 'testFBId');
         fbCase.dealSize = 1000;
         fbCase.probability = 10.0;
-        fbCaseId = api.updateCaseTitleStageTag(fbCase, true);
+        fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>());
         System.assertEquals(fbCaseId, 'testFBId');
         
         Test.stopTest();
@@ -138,10 +138,10 @@ private class TestFBApi {
         fbCase.priority = 1;
         fbCase.title = 'Test title';
         fbCase.caseId = 'testFBId';
-        String fbCaseId = api.addProductTag(fbCase, 'CommCare,CommConnect');
+        String fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>{'CommCare','CommConnect'});
         System.assertEquals(fbCaseId, 'testFBId');
-        fbCaseId = api.removeProductTags(fbCase, new Set<String>{'CommCare'});
-        System.assertEquals(fbCaseId, 'testFBId');
+        //fbCaseId = api.removeProductTags(fbCase, new Set<String>{'CommCare'});
+        //System.assertEquals(fbCaseId, 'testFBId');
         
         Test.stopTest();
     }

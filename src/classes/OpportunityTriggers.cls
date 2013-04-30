@@ -5,7 +5,11 @@
  * @date    11/13/2012
  */
 public with sharing class OpportunityTriggers {
-
+    
+    private static final Set<String> PRODUCTS_AS_TAGS = new Set<String>{'CommCare', 
+                                                                        'CommConnect', 
+                                                                        'CommTrack'};
+                                                                        
     /**
      * We use @future here in order to perform HTTP callouts from within a trigger context
      */
@@ -57,15 +61,18 @@ public with sharing class OpportunityTriggers {
     	
     	if ((oppNew.Name != oppOld.Name) || 
     	    (oppNew.StageName != oppOld.StageName) || 
-    	    (oppNew.Amount != oppOld.Amount) ||
-    	    (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c)) {
+    	    (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) ||
+    	    (oppOld.Product_Text__c != oppNew.Product_Text__c)) {
     		
     		if (!System.isBatch()) {
     			
     			FogBugzCase fbCase = FogBugzUtils.createFBCaseFromOpportunity(oppNew);
     			String tags = null;
-    			boolean editTags = (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) || (oppNew.Amount != oppOld.Amount);
-    			updateCase(oppNew.Id, editTags);
+    			boolean editTags = (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) || 
+    			                   (oppNew.Product_Text__c != oppOld.Product_Text__c);
+    			                   
+    			updateCase(oppNew.Id, editTags, oppNew.Product_Text__c, oppOld.Product_Text__c);
+
     			                
     		}
     		
@@ -76,7 +83,7 @@ public with sharing class OpportunityTriggers {
      * We use @future here in order to perform HTTP callouts from within a trigger context
      */
     @future(callout=true)
-    public static void updateCase(String opportunityId, boolean editTags) {
+    public static void updateCase(String opportunityId, boolean editTags, String oldProds, String newProds) {
     	
     	Opportunity o = FogBugzUtils.fetchOpportunity(opportunityId);
         
@@ -91,9 +98,48 @@ public with sharing class OpportunityTriggers {
             else {
             	fbCase.dealSize = 0;
             }
-            fbCase.probability = o.Fogbugz_Probability__c;            
+            if (fbCase.probability != null) {
+                fbCase.probability = o.Fogbugz_Probability__c;
+            }
+            else {
+            	fbCase.probability = 0;
+            }            
             
-            String fbCaseId = fbAPI.updateCaseTitleStageTag(fbCase, editTags);
+            Set<String> tags = new Set<String>();
+            
+            if (((oldProds != null) && !oldProds.equals(newProds)) || ((newProds != null) && (!newProds.equals(oldProds)))) {
+            	
+            	Set<String> oldProducts = new Set<String>();
+            	if (oldProds != null) {
+                    oldProducts.addAll(oldProds.split('; '));
+            	}
+                Set<String> newProducts = new Set<String>();
+                if (newProds != null) {
+                    newProducts.addAll(newProds.split('; '));
+                }
+                
+                if (newProducts.size() >= oldProducts.size()) {
+                	
+                	for (String newProd : newProducts) {
+                		if ((PRODUCTS_AS_TAGS.contains(newProd)) && (!oldProducts.contains(newProd))) {
+                			tags.add(newProd);
+                		}
+                	}
+                	
+                }
+                else {
+                	
+                	for (String oldProd : oldProducts) {
+                        if ((PRODUCTS_AS_TAGS.contains(oldProd)) && (!newProducts.contains(oldProd))) {
+                            tags.add(oldProd);
+                        }
+                    }
+                    
+                }
+                
+            }
+            
+            String fbCaseId = fbAPI.updateCaseTitleStageTag(fbCase, editTags, tags);
             
         }
         else {

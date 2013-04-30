@@ -9,7 +9,7 @@ global class FogBugzHttpCalloutMock implements HttpCalloutMock {
     private String responseBody;
     public static final String RESPONSE_TAGS = '<?xml version="1.0" encoding="UTF-8"?><response><cases count="1">' +
                                                  '<case ixBug="testFBId" operations="edit,assign,resolve,email,remind">'+
-                                                 '<tags><tag><![CDATA[[0/20]]]><tag><![CDATA[Test]]></tags></case>'+
+                                                 '<tags><tag><![CDATA[[0/20]]]></tag><tag><![CDATA[Test]]></tag><tag><![CDATA[CommCare]]></tag></case>'+
                                                  '</cases></response>';
                                                  
     public static final String RESPONSE_UPDATE = '<?xml version="1.0" encoding="UTF-8"?><response>' +
@@ -36,6 +36,7 @@ global class FogBugzHttpCalloutMock implements HttpCalloutMock {
     
     
     global HTTPResponse respond(HTTPRequest req) {
+
     	HTTPResponse res = new HTTPResponse();
     	String reqBody = req.getBody();
     	
@@ -52,6 +53,7 @@ global class FogBugzHttpCalloutMock implements HttpCalloutMock {
     		if (params.containsKey('q')) {
     			
     			if (params.get('cols') == 'tags') {
+
     				res.setBody(RESPONSE_TAGS);
     			}
     			else {
