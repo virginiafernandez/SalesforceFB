@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <enableFeeds>true</enableFeeds>
     <fields>
         <fullName>CommCare_Newsletter__c</fullName>
         <defaultValue>false</defaultValue>
@@ -516,37 +515,6 @@
         </filters>
         <label>Devdir Leads - Moz</label>
     </listViews>
-    <searchLayouts>
-        <customTabListAdditionalFields>FULL_NAME</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.COMPANY</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.PHONE</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.EMAIL</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.COUNTRY</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.LEAD_SOURCE</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.STATUS</customTabListAdditionalFields>
-        <customTabListAdditionalFields>LEAD.LAST_UPDATE</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Country__c</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>FULL_NAME</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>LEAD.COMPANY</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Country__c</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>FULL_NAME</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>LEAD.COMPANY</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>LEAD.PHONE</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>LEAD.MOBILE_PHONE</lookupPhoneDialogsAdditionalFields>
-        <searchFilterFields>LEAD.LAST_NAME</searchFilterFields>
-        <searchFilterFields>LEAD.FIRST_NAME</searchFilterFields>
-        <searchFilterFields>LEAD.EMAIL</searchFilterFields>
-        <searchFilterFields>LEAD.COMPANY</searchFilterFields>
-        <searchFilterFields>LEAD.COUNTRY</searchFilterFields>
-        <searchFilterFields>LEAD.LEAD_SOURCE</searchFilterFields>
-        <searchFilterFields>LEAD.STATUS</searchFilterFields>
-        <searchResultsAdditionalFields>FULL_NAME</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>LEAD.COMPANY</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>LEAD.EMAIL</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>LEAD.STATUS</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Country__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
-    </searchLayouts>
     <validationRules>
         <fullName>Contact_Us_not_allowed</fullName>
         <active>false</active>

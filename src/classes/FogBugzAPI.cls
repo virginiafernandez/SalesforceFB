@@ -255,30 +255,6 @@ public with sharing class FogBugzAPI {
 		
 		if (editTags) {
 			
-	        Map<String, String> paramsTags = new Map<String, String> {
-	            'cmd' => 'search',
-	            'q' => fbCase.caseId,
-	            'cols' => 'tags'
-	        };
-	        
-	        HTTPRequest req = new HttpRequest();
-	        req.setEndpoint(FB_API_URL);
-	        req.setBody('token=' + FogBugz_Settings__c.getOrgDefaults().Token__c + '&' + encodeParameters(paramsTags));
-	        req.setTimeout(FB_HTTP_TIMEOUT);
-	        req.setMethod('POST');
-	        
-	        HTTPResponse res = null;
-	        
-	        if (Test.isRunningTest()) {
-	           	
-	           FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
-	           res = mock.respond(req);
-	        }
-	        else {
-	           HTTP connection = new HTTP();
-	           res = connection.send(req);
-	        }
-	        
 	        List<String> listTags = getCaseTags(fbCase);
 	        
 	        tags = '';

@@ -21,6 +21,19 @@ public class OpenOpportunityMailer {
         
         sendEmail(content, recipients, EMAIL_SUBJECT, user.Name);        
     }
+    
+    public static void sendOpenOpportunitiesDailyReport(User[] users, Map<String, Opportunity[]> stagedOpportunities) {
+        
+        Map<String, String> stageComments = new Map<String, String>();
+        for (String stageComment :stagedOpportunities.keySet()) {           
+            stageComments.put(stageComment, '');
+        }
+        
+        String content = OpenOpportunityEmailUtils.buildEmailContent(stagedOpportunities, false, stageComments);
+        
+        sendEmails(content, users, EMAIL_SUBJECT);
+                
+    }
 
     public static void sendOpenOpportunitiesSingleReport(User[] users, String[] recipients, Map<String, String> stageComments) {        
         
@@ -38,8 +51,8 @@ public class OpenOpportunityMailer {
         sendEmail(content, recipients, EMAIL_SUBJECT, usersNameSubject);
     }
     
-    public static void sendRedOpenOpportunitiesBatchReport(User user, String[] recipients, Map<String, Opportunity[]> stagedOpportunities) {
-        
+    private static Map<String, Opportunity[]> getRedStagedOpportunities(Map<String, Opportunity[]> stagedOpportunities)
+    {
         Map<String, Opportunity[]> redStagedOpportunities = new Map<String, Opportunity[]>();
         
         Integer daysNotUpdatedLimit = Open_Opportunity_Settings__c.getOrgDefaults().Days_Not_Updated_Limit__c != null 
@@ -77,7 +90,14 @@ public class OpenOpportunityMailer {
               redStagedOpportunities.put(stageName, opportunities);
             }
         } 
+        
+        return redStagedOpportunities;
+    }
     
+    public static void sendRedOpenOpportunitiesBatchReport(User user, String[] recipients, Map<String, Opportunity[]> stagedOpportunities) {
+        
+        Map<String, Opportunity[]> redStagedOpportunities = getRedStagedOpportunities(stagedOpportunities);
+            
         // Only send Mail if there are opportunities    
         if (!redStagedOpportunities.isEmpty()) {
             
@@ -89,6 +109,23 @@ public class OpenOpportunityMailer {
             String content = OpenOpportunityEmailUtils.buildEmailContent(redStagedOpportunities, false, stageComments);
             
             sendEmail(content, recipients, RED_EMAIL_SUBJECT, user.Name);
+        }
+    }
+    
+    public static void sendRedOpenOpportunitiesUsers(User[] users, Map<String, Opportunity[]> stagedOpportunities) {
+        
+        Map<String, Opportunity[]> redStagedOpportunities = getRedStagedOpportunities(stagedOpportunities); 
+    
+        // Only send Mail if there are opportunities    
+        if (!redStagedOpportunities.isEmpty()) {
+            
+            Map<String, String> stageComments = new Map<String, String>();
+            for (String stageComment :redStagedOpportunities.keySet()) {           
+                stageComments.put(stageComment, '');
+            }
+            
+            String content = OpenOpportunityEmailUtils.buildEmailContent(redStagedOpportunities, false, stageComments);
+            sendEmails(content, users, RED_EMAIL_SUBJECT);
         }
     }
     
@@ -108,6 +145,30 @@ public class OpenOpportunityMailer {
         mail.setSubject(subject);
         mail.setToAddresses(recipients);
         Messaging.sendEmail(new Messaging.Email[] {mail});
+    }
+    
+    private static void sendEmails(String content, User[] users, String subjectTemplate) {
+        
+        Messaging.Email[] mails = new Messaging.Email[]{};
+        OrgWideEmailAddress wideAddress = OpenOpportunityReportController.getOrganizationWideAddressMail();
+        
+        for (User user: users) { 
+	        
+	        String subject = subjectTemplate.replace('<Name of User>', user.Name).replace('<Date>', Date.today().format());
+	        Messaging.Singleemailmessage mail = new Messaging.Singleemailmessage();
+	        
+	        if (wideAddress != null) {
+	            mail.setOrgWideEmailAddressId(wideAddress.Id);
+	        }
+	        
+	        mail.setHtmlBody(content);
+	        mail.setSubject(subject);
+	        mail.setTargetObjectId(user.Id);
+	        mail.setSaveAsActivity(false);
+	        mails.add(mail);
+	        
+        }
+        Messaging.sendEmail(mails);
     }
     
 }

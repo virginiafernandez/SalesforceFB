@@ -26,23 +26,6 @@ public class OpenOpportunityTest {
         Test.stopTest();        
     }
     
-    /*
-    static testMethod void testEmailReportSuccessWithFields() {
-        
-        addCustomColumns();
-        createOpportunity();
-        Test.startTest();
-        OpenOpportunityReportUIController controller = new OpenOpportunityReportUIController();
-              
-        for (String stageComment :controller.stagedComments.keySet()) {
-            controller.stagedComments.put(stageComment, 'Test Comment');
-        }
-        controller.initAction();
-        controller.sendEmail();
-        Test.stopTest();        
-    }
-    */
-    
     static testMethod void testEmailReportFailure() {
         
         createOpportunity();
@@ -132,4 +115,38 @@ public class OpenOpportunityTest {
         return opportunity.Id;        	
     }    
     
+    private static void setSetting(Id id) {
+    	Opportunity opp = [select Owner.Email, OwnerId from Opportunity where id =: id];
+        
+        Open_Opportunity_Settings__c setting = Open_Opportunity_Settings__c.getOrgDefaults();
+        setting.Biz_Dev_Daily_Report_Emails__c = opp.Owner.Email;
+        setting.Default_Email_Recipient__c = opp.Owner.Email;
+        setting.Days_Not_Updated_Limit_Early_Stages__c = -1;
+        setting.Days_Not_Updated_Limit__c = -1;
+        insert setting;
+    }
+    
+    static testMethod void testOpenOpportunityNeedUpdateDailySchedule() {
+        setSetting(createOpportunity());
+        addCustomColumns();
+        
+        Test.startTest();           
+        System.schedule('Test Daily Open Opportunity Need Update', '0 0 * * * ?', new OpenOpportunityNeedUpdateDailySchedule()); 
+        Test.stopTest();       
+    }
+    
+    static testMethod void testOpenOpportunityNeedUpdateDailyScheduleLateStage() {
+    	String id = createOpportunity();
+        setSetting(id);
+        
+        Opportunity opp = [select Id, StageName from Opportunity where Id =: id];
+        opp.StageName = 'Stage 4 - Proposal Development';
+        update opp;
+        
+        addCustomColumns();
+        
+        Test.startTest();           
+        System.schedule('Test Daily Open Opportunity Need Update', '0 0 * * * ?', new OpenOpportunityNeedUpdateDailySchedule()); 
+        Test.stopTest();       
+    }    
 }

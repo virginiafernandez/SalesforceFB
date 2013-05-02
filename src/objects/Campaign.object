@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>CazoomiId__c</fullName>
         <description>CazoomiId</description>
@@ -119,15 +118,6 @@
         </filters>
         <label>My Active Campaigns</label>
     </listViews>
-    <searchLayouts>
-        <customTabListAdditionalFields>CAMPAIGN.NAME</customTabListAdditionalFields>
-        <customTabListAdditionalFields>CAMPAIGN.STATUS</customTabListAdditionalFields>
-        <customTabListAdditionalFields>CAMPAIGN.START_DATE</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>CAMPAIGN.NAME</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>CAMPAIGN.NAME</lookupPhoneDialogsAdditionalFields>
-        <searchResultsAdditionalFields>CAMPAIGN.NAME</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>CORE.USERS.ALIAS</searchResultsAdditionalFields>
-    </searchLayouts>
     <webLinks>
         <fullName>ViewAllCampaignMembers</fullName>
         <availability>online</availability>

@@ -146,4 +146,16 @@
     <pluralLabel>Project Products</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
+    <webLinks>
+        <fullName>Add_Product</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Add Product</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a0H/e?CF00Nb0000002GMSs={!Project__c.Name}&amp;CF00Nb0000002GMSs_lkid={!Project__c.Id}&amp;retURL=%2F{!Project__c.Id}&amp;saveURL={!Project__c.Id}</url>
+    </webLinks>
 </CustomObject>
