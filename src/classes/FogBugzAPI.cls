@@ -255,30 +255,6 @@ public with sharing class FogBugzAPI {
 		
 		if (editTags) {
 			
-	        Map<String, String> paramsTags = new Map<String, String> {
-	            'cmd' => 'search',
-	            'q' => fbCase.caseId,
-	            'cols' => 'tags'
-	        };
-	        
-	        HTTPRequest req = new HttpRequest();
-	        req.setEndpoint(FB_API_URL);
-	        req.setBody('token=' + FogBugz_Settings__c.getOrgDefaults().Token__c + '&' + encodeParameters(paramsTags));
-	        req.setTimeout(FB_HTTP_TIMEOUT);
-	        req.setMethod('POST');
-	        
-	        HTTPResponse res = null;
-	        
-	        if (Test.isRunningTest()) {
-	           	
-	           FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
-	           res = mock.respond(req);
-	        }
-	        else {
-	           HTTP connection = new HTTP();
-	           res = connection.send(req);
-	        }
-	        
 	        List<String> listTags = getCaseTags(fbCase);
 	        tags = '';
 	        
@@ -320,86 +296,6 @@ public with sharing class FogBugzAPI {
         return parseUpsertId(res.getBody());
     }
     
-    public String addProductTag(FogBugzCase fbCase, String tags) {
-        List<String> listTags = getCaseTags(fbCase);
-        
-        for (String tag: listTags) {
-        	tags += tag +','; 
-        }
-        
-        
-        Map<String, String> params = new Map<String, String> {
-            'cmd' => 'edit',
-            'ixBug' => fbCase.caseId,
-            'sVersion' => fbCase.externalBugID,
-            'sTags' => tags
-        };
-        
-        HTTPRequest req = new HttpRequest();
-        req.setEndpoint(FB_API_URL);
-        req.setBody('token=' + FogBugz_Settings__c.getOrgDefaults().Token__c + '&' + encodeParameters(params));
-        req.setTimeout(FB_HTTP_TIMEOUT);
-        req.setMethod('POST');
-        
-        HTTP connection = new HTTP();
-        HTTPResponse res = null;
-            
-        if (Test.isRunningTest()) {
-            
-            FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
-            res = mock.respond(req);
-        }
-        else {
-            res = connection.send(req);
-        }
-        
-        return parseUpsertId(res.getBody());
-    }
-    
-    public String removeProductTags(FogBugzCase fbCase, Set<String> tags) {
-    	
-        String newTags = '';
-        List<String> listTags = getCaseTags(fbCase);
-        
-        for (String tag: listTags) {
-            if (!tags.contains(tag)) {
-            	newTags += tag+',';
-            } 
-        }
-        
-        if (newTags.equals('')) {
-        	
-        	newTags = ' ';
-        }
-        
-        Map<String, String> params = new Map<String, String> {
-            'cmd' => 'edit',
-            'ixBug' => fbCase.caseId,
-            'sVersion' => fbCase.externalBugID,
-            'sTags' => newTags
-        };
-        
-        HTTPRequest req = new HttpRequest();
-        req.setEndpoint(FB_API_URL);
-        req.setBody('token=' + FogBugz_Settings__c.getOrgDefaults().Token__c + '&' + encodeParameters(params));
-        req.setTimeout(FB_HTTP_TIMEOUT);
-        req.setMethod('POST');
-        
-        HTTP connection = new HTTP();
-        HTTPResponse res = null;
-            
-        if (Test.isRunningTest()) {
-            
-            FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
-            res = mock.respond(req);
-        }
-        else {
-            res = connection.send(req);
-        }
-        
-        return parseUpsertId(res.getBody());
-    }
-
     public String addNote(String caseId, String note) {
         Map<String, String> params = new Map<String, String> {
             'cmd' => 'edit',

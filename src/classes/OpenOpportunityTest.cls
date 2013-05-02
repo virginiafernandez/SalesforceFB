@@ -26,23 +26,6 @@ public class OpenOpportunityTest {
         Test.stopTest();        
     }
     
-    /*
-    static testMethod void testEmailReportSuccessWithFields() {
-        
-        addCustomColumns();
-        createOpportunity();
-        Test.startTest();
-        OpenOpportunityReportUIController controller = new OpenOpportunityReportUIController();
-              
-        for (String stageComment :controller.stagedComments.keySet()) {
-            controller.stagedComments.put(stageComment, 'Test Comment');
-        }
-        controller.initAction();
-        controller.sendEmail();
-        Test.stopTest();        
-    }
-    */
-    
     static testMethod void testEmailReportFailure() {
         
         createOpportunity();
@@ -132,14 +115,6 @@ public class OpenOpportunityTest {
         return opportunity.Id;        	
     }    
     
-    static testMethod void testDailyEmailReportNoSetting() {
-        
-        createOpportunity();           
-        Test.startTest();           
-        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
-        Test.stopTest();        
-    }
-    
     private static void setSetting(Id id) {
     	Opportunity opp = [select Owner.Email, OwnerId from Opportunity where id =: id];
         
@@ -149,25 +124,6 @@ public class OpenOpportunityTest {
         setting.Days_Not_Updated_Limit_Early_Stages__c = -1;
         setting.Days_Not_Updated_Limit__c = -1;
         insert setting;
-    }
-    
-    static testMethod void testDailyEmailReport() {
-        
-        setSetting(createOpportunity());
-                   
-        Test.startTest();           
-        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
-        Test.stopTest();        
-    
-    }
-    
-    static testMethod void testDailyEmailReportCustomColumns() {
-    	setSetting(createOpportunity());
-    	addCustomColumns();
-    	
-    	Test.startTest();           
-        System.schedule('Test Biz Dev Daily Report Out', '0 0 * * * ?', new OpenOpportunitiesDailyScheduler()); 
-        Test.stopTest();    
     }
     
     static testMethod void testOpenOpportunityNeedUpdateDailySchedule() {

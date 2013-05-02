@@ -64,8 +64,11 @@ public with sharing class OpportunityTriggers {
     			
     			FogBugzCase fbCase = FogBugzUtils.createFBCaseFromOpportunity(oppNew);
     			String tags = null;
-    			boolean editTags = (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) || (oppNew.Amount != oppOld.Amount);
-    			updateCase(oppNew.Id, editTags);
+    			
+    			boolean editTags = (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) || 
+    			                   (oppNew.Product_Text__c != oppOld.Product_Text__c);
+    			                   
+    			updateCase(oppNew.Id, editTags, oppNew.Product_Text__c, oppOld.Product_Text__c);
     			                
     		}
     		
