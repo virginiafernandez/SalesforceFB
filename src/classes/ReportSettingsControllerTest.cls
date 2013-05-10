@@ -28,12 +28,19 @@ private class ReportSettingsControllerTest {
         Test.startTest();
         
         ReportSettingsController settings = new ReportSettingsController();
+        
+        List<SelectOption> hours = settings.getHours();
+        System.assertEquals(hours.size(), 24);
+        for (Integer i = 0; i < 24;i++) {
+        	System.assertEquals(hours.get(i).getValue(), String.valueOf(i));
+        	System.assertEquals(hours.get(i).getLabel(), String.valueOf(i));
+        }
+        
         PageReference pr = settings.saveSettings();
         System.assertEquals(settings.getStatus(), 'Start');
         System.assert(settings.getSelectedUsers().isEmpty());
         System.assert(!settings.getReports().isEmpty());
         System.assert(!settings.getUsers().isEmpty());
-        System.assertEquals(settings.getSchedulingTime(), null);
         System.assertEquals(settings.getNextFireTime(), '');
         System.assertEquals(null, settings.getCronState());
         System.assert(pr == null);
@@ -57,6 +64,8 @@ private class ReportSettingsControllerTest {
         customReport.Name = report.Id;
         customReport.Report_Name__c = report.Name;
         customReport.User_Filter__c = true;
+        customReport.Day__c = 1;
+        customReport.Hour__c = 0;
         insert customReport;
             
         Test.startTest();
@@ -67,6 +76,11 @@ private class ReportSettingsControllerTest {
         System.assertEquals(settings.getSelectedUsers().get(0), user.Id);
         System.assert(!settings.getReports().isEmpty());
         System.assert(!settings.getUsers().isEmpty());
+        System.assertEquals(settings.getReports().get(0).getDay(), 1);
+        System.assertEquals(settings.getReports().get(0).getHour(), 0);
+        System.assertEquals(settings.getReports().get(0).getSelected(), true);
+        System.assertEquals(settings.getReports().get(0).getFiltered(), true);
+        System.assertEquals(settings.getReports().get(0).getName(), report.Name);
         settings.save();
         
         Test.stopTest();
@@ -82,7 +96,9 @@ private class ReportSettingsControllerTest {
         settings.setSelectedUsers(new List<String>{selectedUser});
         ReportSettingsController.CustomReport report = settings.getReports().get(0);
         report.setSelected(true);
-        report.setFiltered(true);        
+        report.setFiltered(true);      
+        report.setDay(0);
+        report.setHour(9);  
         settings.save();
         
         Reports_Settings__c reportSettings = Reports_Settings__c.getOrgDefaults();
@@ -93,6 +109,8 @@ private class ReportSettingsControllerTest {
         Custom_Reports__c customReport = customReports.get(report.getId());
         System.assertEquals(customReport.User_Filter__c, true);
         System.assertEquals(customReport.Report_Name__c, report.getName());
+        System.assertEquals(customReport.Hour__c, 9);
+        System.assertEquals(customReport.Day__c, 0);
         
         Test.stopTest();
     }
@@ -103,7 +121,6 @@ private class ReportSettingsControllerTest {
         Test.startTest();
         
         ReportSettingsController settings = new ReportSettingsController();
-        settings.setSchedulingTime(1);
         PageReference pr = settings.start();
         System.assertEquals(settings.getErrorStart(), 'ERROR - To run the scheduler you need to allow the access');
         
@@ -122,8 +139,8 @@ private class ReportSettingsControllerTest {
         Apexpages.currentPage().getParameters().remove('code');
         settings = new ReportSettingsController();
         settings.SCHEDULER_NAME += ' Test';
-        settings.setSchedulingTime(1);
         settings.start();
+        System.assert(settings.getReadOnly());
         reportSettings = Reports_Settings__c.getOrgDefaults();
         CronTrigger cg = [select Id, State, NextFireTime from CronTrigger where Id =: reportSettings.Custom_Report_Emailing_Scheduler__c];
         System.assertEquals(cg.State, settings.getCronState());
@@ -180,13 +197,17 @@ private class ReportSettingsControllerTest {
      
      static testMethod void allUsersTest() {
      	
+     	Reports_Settings__c report = Reports_Settings__c.getOrgDefaults();
+     	report.Custom_Report_Emailing_Scheduler__c = null;
+     	update report;
+     	
      	Test.startTest();
         
         ReportSettingsController settings = new ReportSettingsController();
         settings.setAllUsers(true);
         settings.save();
         
-        Reports_Settings__c report = Reports_Settings__c.getOrgDefaults();
+        report = Reports_Settings__c.getOrgDefaults();
         System.assertEquals(report.Users__c, 'all');
         
         settings = new ReportSettingsController();

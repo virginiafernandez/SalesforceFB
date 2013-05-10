@@ -59,7 +59,12 @@ private class CustomReportEmailingTest {
         customReport.Name = report.Id;
         customReport.Report_Name__c = report.Name;
         customReport.User_Filter__c = true;
+        customReport.Day__c = 0;
+        customReport.Hour__c = Integer.valueOf(Datetime.now().format('h'));        
         insert customReport;
+        
+        settings.Scheduling_Interval__c = Integer.valueOf(Datetime.now().format('m')) + 2;
+        update settings;
              
         System.RestContext.request = new RestRequest();
         RestContext.request.requestURI = '/services/apexrest/SendCustomReport/';

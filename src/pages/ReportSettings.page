@@ -7,17 +7,18 @@
         </apex:pageBlock>
     </apex:form>
     <apex:form >
+        <apex:pageMessages />
 	    <apex:pageBlock title="Custom Report Emailing Settings">
 		    <apex:pageBlockButtons >
-	           <apex:commandButton action="{!save}" value="Save"/>
+	           <apex:commandButton disabled="{!readOnly}" action="{!save}" value="Save"/>
 	        </apex:pageBlockButtons>
 	        
 	        <apex:pageBlockSection title="Users" columns="1">
 				<apex:outputLabel value="Users to send reports to:"></apex:outputLabel><br/>
-				<apex:outputPanel ><apex:inputCheckbox value="{!allUsers}" />All Users</apex:outputPanel>
+				<apex:outputPanel ><apex:inputCheckbox disabled="{!readOnly}" value="{!allUsers}" />All Users</apex:outputPanel>
 				<span>-- OR --</span>
 				<apex:pageBlockSectionItem >
-					<apex:selectList value="{!selectedUsers}" multiselect="true">
+					<apex:selectList disabled="{!readOnly}" value="{!selectedUsers}" multiselect="true">
 		                <apex:selectOptions value="{!users}"/>
 					</apex:selectList>
 				</apex:pageBlockSectionItem>
@@ -27,7 +28,7 @@
 		        <apex:pageBlockTable value="{!reports}" var="report">
 	                <apex:column >
 	                    <apex:facet name="header">Selected</apex:facet>
-	                    <apex:inputCheckbox value="{!report.selected}"></apex:inputCheckbox>
+	                    <apex:inputCheckbox disabled="{!readOnly}" value="{!report.selected}"></apex:inputCheckbox>
 	                </apex:column>
 	                <apex:column >
 	                    <apex:facet name="header">Name</apex:facet>
@@ -35,8 +36,27 @@
 	                </apex:column>
 	                <apex:column >
 	                    <apex:facet name="header">Filtered by user</apex:facet>
-	                    <apex:inputCheckbox value="{!report.filtered}"></apex:inputCheckbox>
+	                    <apex:inputCheckbox disabled="{!readOnly}" value="{!report.filtered}"></apex:inputCheckbox>
 	                </apex:column>
+	                <apex:column >
+                        <apex:facet name="header">Scheduling Day</apex:facet>
+                        <apex:selectList disabled="{!readOnly}" size="1" multiselect="false" value="{!report.day}">
+                            <apex:selectOption itemValue="0" itemLabel="Daily" />
+                            <apex:selectOption itemValue="1" itemLabel="Monday" />
+                            <apex:selectOption itemValue="2" itemLabel="Tuesday" />
+                            <apex:selectOption itemValue="3" itemLabel="Wednesday" />
+                            <apex:selectOption itemValue="4" itemLabel="Thursday" />
+                            <apex:selectOption itemValue="5" itemLabel="Friday" />
+                            <apex:selectOption itemValue="6" itemLabel="Saturday" />
+                            <apex:selectOption itemValue="7" itemLabel="Sunday" />
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Scheduling Hour</apex:facet>
+                        <apex:selectList disabled="{!readOnly}" size="1" multiselect="false" value="{!report.hour}">
+                            <apex:selectOptions value="{!hours}" />
+                        </apex:selectList>
+                    </apex:column>
 	            </apex:pageBlockTable>
             </apex:pageBlockSection>
             
@@ -44,10 +64,6 @@
     </apex:form>
     <apex:form >
         <apex:pageBlock title="Custom Report Emailing Scheduler" >
-            <apex:outputPanel rendered="{!status == 'Start'}" >
-	            <apex:outputLabel value="Scheduling time: "></apex:outputLabel>
-	            <apex:inputText required="true" value="{!schedulingTime}"></apex:inputText><br/>
-            </apex:outputPanel>
             <apex:outputPanel rendered="{!status != 'Start'}" >
                 <apex:outputLabel value="Scheduler State:"></apex:outputLabel>
                 <apex:outputLabel value="{!cronState}"></apex:outputLabel><br/>

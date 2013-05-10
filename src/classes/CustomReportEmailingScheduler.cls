@@ -10,13 +10,12 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
     /**
      * The batch job code starts here
      */
-
+    
     public CustomReportEmailingScheduler() {
         
     }
         
     global void execute(SchedulableContext bc) {
-    	
         sendEmail();
     }
     
@@ -32,6 +31,7 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
         String url_host = salesforceBaseUrl.getHost();
         String instance_url = url_protocol+'://'+url_host;
         
+        //We get the auth_token to authenticate with the org
         Httprequest req = new Httprequest();
         req.setEndpoint(instance_url+'/services/oauth2/token');
         req.setBody('grant_type=refresh_token&client_secret='+client_secret+'&client_id='+client_key+'&refresh_token='+refresh_token);
@@ -51,6 +51,7 @@ global without sharing class CustomReportEmailingScheduler implements Schedulabl
         Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
         String access_token = (String) params.get('access_token');
         
+        //We call the rest api to send the email
         req = new Httprequest();
         req.setEndpoint(instance_url+'/services/apexrest/SendCustomReport/');
         req.setMethod('GET');
