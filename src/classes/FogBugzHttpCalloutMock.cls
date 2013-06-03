@@ -69,7 +69,7 @@ global class FogBugzHttpCalloutMock implements HttpCalloutMock {
     	else if (params.get('cmd') == 'setCurrentFilter') {
     		res.setBody(RESPONSE_FILTER);
     	}
-    	else if ((params.get('cmd') == 'new') || (params.get('cmd') == 'resolve') || (params.get('cmd') == 'close') || (params.get('cmd') == 'edit')) {
+    	else if ((params.get('cmd') == 'new') || (params.get('cmd') == 'resolve') || (params.get('cmd') == 'close') || (params.get('cmd') == 'edit') || (params.get('cmd') == 'reopen')) {
     		res.setBody(RESPONSE_UPDATE);
     	}
     	else if (params.get('cmd') == 'viewPerson') {

@@ -10,6 +10,8 @@ public with sharing class OpportunityTriggers {
                                                                         'CommConnect', 
                                                                         'CommTrack'};
                                                                         
+    private static final Set<String> CLOSED_STAGES = new Set<String>{'Closed'};
+                                                                        
     /**
      * We use @future here in order to perform HTTP callouts from within a trigger context
      */
@@ -23,7 +25,9 @@ public with sharing class OpportunityTriggers {
 	        FogBugzCase fbCase = FogBugzUtils.createFBCaseFromOpportunity(o);
 	        FogBugzAPI fbAPI = new FogBugzAPI();
 	        
-	        String fbCaseId = Test.isRunningTest() ? TestFogBugzAPI.TEST_FB_ID : fbAPI.createCase(fbCase);
+	        boolean close = CLOSED_STAGES.contains(o.StageName);
+	        
+	        String fbCaseId = fbAPI.createCase(fbCase, close);
 	        
 	        if (fbCaseId != null) {
 	            o.Fogbugz_Ticket_Number__c = fbCaseId;
@@ -71,7 +75,7 @@ public with sharing class OpportunityTriggers {
     			boolean editTags = (oppOld.Fogbugz_Probability__c != oppNew.Fogbugz_Probability__c) || 
     			                   (oppNew.Product_Text__c != oppOld.Product_Text__c);
     			                   
-    			updateCase(oppNew.Id, editTags, oppNew.Product_Text__c, oppOld.Product_Text__c);
+    			updateCase(oppNew.Id, editTags, oppNew.Product_Text__c, oppOld.Product_Text__c, oppOld.StageName);
 
     			                
     		}
@@ -83,7 +87,7 @@ public with sharing class OpportunityTriggers {
      * We use @future here in order to perform HTTP callouts from within a trigger context
      */
     @future(callout=true)
-    public static void updateCase(String opportunityId, boolean editTags, String oldProds, String newProds) {
+    public static void updateCase(String opportunityId, boolean editTags, String oldProds, String newProds, String oldStage) {
     	
     	Opportunity o = FogBugzUtils.fetchOpportunity(opportunityId);
         
@@ -139,7 +143,11 @@ public with sharing class OpportunityTriggers {
                 
             }
             
-            String fbCaseId = fbAPI.updateCaseTitleStageTag(fbCase, editTags, tags);
+            boolean close = CLOSED_STAGES.contains(o.StageName);
+            
+            boolean reopen = CLOSED_STAGES.contains(oldStage) && (!o.StageName.equals(oldStage));
+            
+            String fbCaseId = fbAPI.updateCaseTitleStageTag(fbCase, editTags, tags, close, reopen);
             
         }
         else {

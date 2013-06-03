@@ -94,7 +94,7 @@ public class TestFogBugzAPI {
         fbCase.title = 'Test title';
         
         
-        api.createCase(fbCase);
+        api.createCase(fbCase, false);
         
         System.assertEquals(TEST_FB_ID, fbCase.caseId, 'FB case id does not match');
         

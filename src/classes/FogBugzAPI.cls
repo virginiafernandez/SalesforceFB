@@ -92,7 +92,7 @@ public with sharing class FogBugzAPI {
         return connection.send(req).getBody();
 	}
 	
-	public String createCase(FogBugzCase fbCase) {
+	public String createCase(FogBugzCase fbCase, boolean close) {
 		
 		Map<String, String> params = new Map<String, String> {
 			'cmd' => 'new',
@@ -126,7 +126,14 @@ public with sharing class FogBugzAPI {
             res = connection.send(req);
 		}
 		
+		
 		fbCase.caseId = parseUpsertId(res.getBody());
+		
+		if (close) {
+            this.resolveCase(fbCase);
+            this.closeCase(fbCase);
+        }
+        
 		return fbCase.caseId;
 	}
 	
@@ -152,6 +159,34 @@ public with sharing class FogBugzAPI {
         }
         else {
 	        res = connection.send(req);
+        }
+        
+        return parseUpsertId(res.getBody());
+    }
+    
+    public String reopenCase(FogBugzCase fbCase) {
+    	
+        Map<String, String> params = new Map<String, String> {
+            'cmd' => 'reopen',
+            'ixBug' => fbCase.caseId,
+            'sVersion' => fbCase.externalBugID
+        };
+        
+        HTTPRequest req = new HttpRequest();
+        req.setEndpoint(FB_API_URL);
+        req.setBody('token=' + FogBugz_Settings__c.getOrgDefaults().Token__c + '&' + encodeParameters(params));
+        req.setTimeout(FB_HTTP_TIMEOUT);
+        req.setMethod('POST');
+        
+        HTTP connection = new HTTP();
+        HTTPResponse res = null;
+        
+        if (Test.isRunningTest()) {
+            FogBugzHttpCalloutMock mock = new FogBugzHttpCalloutMock();
+            res = mock.respond(req);    
+        }
+        else {
+            res = connection.send(req);
         }
         
         return parseUpsertId(res.getBody());
@@ -241,7 +276,7 @@ public with sharing class FogBugzAPI {
         return parseCaseTags(res.getBody());
 	}
 	
-	public String updateCaseTitleStageTag(FogBugzCase fbCase, boolean editTags, Set<String> products) {
+	public String updateCaseTitleStageTag(FogBugzCase fbCase, boolean editTags, Set<String> products, boolean close, boolean reopen) {
 		
 		Map<String, String> params = new Map<String, String> {
             'cmd' => 'edit',
@@ -299,6 +334,14 @@ public with sharing class FogBugzAPI {
         }
         else {
             res = connection.send(req);
+        }
+        
+        if (close) {
+        	this.resolveCase(fbCase);
+            return this.closeCase(fbCase);
+        }
+        else if (reopen) {
+        	this.reopenCase(fbCase);
         }
         
         return parseUpsertId(res.getBody());

@@ -72,7 +72,7 @@ private class TestFBApi {
         fbCase.priority = 1;
         fbCase.title = 'Test title';
         fbCase.probability = 10.0;
-        String fbCaseId = api.createCase(fbCase);
+        String fbCaseId = api.createCase(fbCase, true);
         System.assertEquals(fbCaseId, 'testFBId');
         
         Test.stopTest();
@@ -100,6 +100,26 @@ private class TestFBApi {
         Test.stopTest();
     }
     
+    static testMethod void reopenCaseTest() {
+        FogBugzAPI api = new FogBugzAPI();
+        
+        Test.startTest();
+        
+        FogBugzCase fbCase = new FogBugzCase();
+        fbCase.externalBugID = 'testSFId';
+        fbCase.project = 'Test project';
+        fbCase.area = 'Test area';
+        fbCase.assignedTo = 'Test assignee';
+        fbCase.status = 'Test status';
+        fbCase.priority = 1;
+        fbCase.title = 'Test title';
+        fbCase.caseId = 'testFBId';
+        String fbCaseId = api.reopenCase(fbCase);
+        System.assertEquals(fbCaseId, 'testFBId');
+        
+        Test.stopTest();
+    }
+    
     static testMethod void updateCaseTest() {
         FogBugzAPI api = new FogBugzAPI();
         
@@ -118,7 +138,7 @@ private class TestFBApi {
         System.assertEquals(fbCaseId, 'testFBId');
         fbCase.dealSize = 1000;
         fbCase.probability = 10.0;
-        fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>());
+        fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>(), false, false);
         System.assertEquals(fbCaseId, 'testFBId');
         
         Test.stopTest();
@@ -138,7 +158,7 @@ private class TestFBApi {
         fbCase.priority = 1;
         fbCase.title = 'Test title';
         fbCase.caseId = 'testFBId';
-        String fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>{'CommCare','CommConnect'});
+        String fbCaseId = api.updateCaseTitleStageTag(fbCase, true, new Set<String>{'CommCare','CommConnect'}, false, true);
         System.assertEquals(fbCaseId, 'testFBId');
         //fbCaseId = api.removeProductTags(fbCase, new Set<String>{'CommCare'});
         //System.assertEquals(fbCaseId, 'testFBId');
